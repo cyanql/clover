@@ -1,0 +1,68 @@
+.manga {
+    &-card {
+        &-container {
+            padding: 30px 20px;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 120px);
+            gap: 10px;
+            justify-content: center;
+        }
+        border: 1px solid transparent;
+        width: 120px;
+        background-color: #202020;
+        &-top {
+            position: relative;
+        }
+        &-cover {
+            width: 120px;
+            height: 170px;
+            vertical-align: middle;
+        }
+        &-type {
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 0px 5px;
+            border-radius: 6px 0px;
+            font-size: 11px;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+        &-progress {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            padding: 0px 5px;
+            border-top-left-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+        &-title {
+            font-size: 12px;
+            font-weight: bold;
+            word-break: break-all;
+        }
+        &-author {
+            padding: 2px 0 4px 0;
+            font-size: 11px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #aaa;
+        }
+        &-tags {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: -2px;
+            .ant-tag {
+                margin: 2px;
+                font-size: 9px;
+                line-height: 14px;
+                padding-inline: 4px;
+            }
+        }
+    }
+}
