@@ -1,8 +1,8 @@
 import React, { memo, useCallback } from 'react'
 import { Card, Tag, Typography } from 'antd'
-import { Manga } from '../store/manga'
 import './manga-thumbnail.less'
 import { Ellipsis } from './ellipsis'
+import { BasicManga } from '../store/manga/basic-manga'
 
 const style: React.CSSProperties = { padding: '6px', display: 'flex', flexDirection: 'column' }
 
@@ -10,8 +10,8 @@ const ellipsis = { rows: 3, suffix: '' }
 
 interface IProps {
     renderKey?: any
-    manga: Manga
-    onClick: (manga: Manga) => void
+    manga: BasicManga
+    onClick: (manga: BasicManga) => void
 }
 
 export const MangaThumbnail = memo((props: IProps) => {

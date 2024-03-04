@@ -1,16 +1,16 @@
 import React, { useMemo, useReducer, useRef } from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { Modal, Progress, Spin, Typography } from 'antd'
-import { IMangaEntry, Manga } from '../store/manga'
+import { IMangaEntry, BasicManga } from '../store/manga/basic-manga'
 import _ from 'lodash'
 import './manga-view.less'
+import { EACH_MANGA_PAGE_HEIGHT, MAX_MANGA_PAGE_WIDTH } from '../common/constant'
 
 function easing(x: number) {
     return Math.sin((x * Math.PI) / 2) // easeOutSine
 }
 
 interface IProps {
-    manga: Manga
+    manga: BasicManga
 }
 
 export const MangaViewer = memo((props: IProps) => {
@@ -20,17 +20,15 @@ export const MangaViewer = memo((props: IProps) => {
     const scrollTimerRef = useRef(-1)
     const { manga } = props
 
-    const height = useMemo(() => Math.round(600 / manga.aspectRatio), [manga.aspectRatio])
-
-    const totalHeight = useMemo(() => height * manga.entries.length, [height, manga.entries.length])
+    const totalHeight = useMemo(() => EACH_MANGA_PAGE_HEIGHT * manga.entries.length, [manga.entries.length])
 
     const canvasStyle = useMemo(() => ({
-        width: 600 + 'px',
+        width: MAX_MANGA_PAGE_WIDTH + 'px',
         height: totalHeight + 'px',
-    }), [height, totalHeight])
+    }), [totalHeight])
 
     useEffect(() => {
-        scrollerRef.current?.scrollTo(0, height * manga.readedIndex + 30)
+        scrollerRef.current?.scrollTo(0, EACH_MANGA_PAGE_HEIGHT * manga.readedIndex + 30)
     }, [manga]) 
 
     const scroll = useCallback((el: HTMLElement, distance: number, duration: number) => {
@@ -77,11 +75,11 @@ export const MangaViewer = memo((props: IProps) => {
         const { scrollTop, offsetHeight } = (e.currentTarget || e.target) as HTMLElement
         const offset = scrollTop - 30 // padding-top
         // 预加载，前1页，只要在屏幕中显示了一部分都需要加载，故取floor
-        const startIdx = Math.floor(offset / height) - 1
+        const startIdx = Math.floor(offset / EACH_MANGA_PAGE_HEIGHT) - 1
         // 预加载，后1页
-        const endIdx = Math.ceil((scrollTop + offsetHeight) / height) + 1  // 画面之外再加载5个
+        const endIdx = Math.ceil((scrollTop + offsetHeight) / EACH_MANGA_PAGE_HEIGHT) + 1  // 画面之外再加载5个
         // 屏幕中占比更大的部分作为已读的章数，故取round
-        manga.read(Math.round(offset / height))
+        manga.read(Math.round(offset / EACH_MANGA_PAGE_HEIGHT))
 
         for (let i = startIdx; i < endIdx; i++) {
             manga.loadEntry(i).then((imgData) => {
@@ -89,17 +87,17 @@ export const MangaViewer = memo((props: IProps) => {
                     // 避免putImageData阻塞渲染
                     const timer = setImmediate(() => {
                         timersRef.current = timersRef.current.filter(v => v !== timer)
-                        ctx.putImageData(imgData, 0, imgData.height * i)
+                        ctx.putImageData(imgData, (MAX_MANGA_PAGE_WIDTH - imgData.width) / 2, imgData.height * i)
                     })
                     timersRef.current.push(timer)
                 }
             })
         }
-    }, 50), [height])
+    }, 50), [])
 
     return (
         <div ref={scrollerRef} className="manga-viewer scrollbar" onScroll={handleScroll}>
-            <canvas ref={canvasRef} width={600} height={totalHeight} style={canvasStyle} />
+            <canvas ref={canvasRef} width={MAX_MANGA_PAGE_WIDTH} height={totalHeight} style={canvasStyle} />
         </div>
     )
 })

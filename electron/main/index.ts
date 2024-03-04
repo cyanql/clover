@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import { initRenderer } from 'electron-store'
@@ -13,10 +13,10 @@ import { initRenderer } from 'electron-store'
 // ├─┬ dist
 // │ └── index.html    > Electron-Renderer
 //
-process.env.DIST_ELECTRON = join(__dirname, '..')
-process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
+process.env.APP_PATH = join(__dirname, '../..')
+process.env.DIST = join(process.env.APP_PATH, '../dist')
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
-  ? join(process.env.DIST_ELECTRON, '../public')
+  ? join(process.env.APP_PATH, '../public')
   : process.env.DIST
 
 // Disable GPU Acceleration for Windows 7
@@ -103,6 +103,10 @@ app.on('activate', () => {
   } else {
     createWindow()
   }
+})
+
+ipcMain.handle('showOpenDialog', (_event, args) => {
+  return dialog.showOpenDialog(args)
 })
 
 // New window example arg: new windows url

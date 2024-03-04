@@ -4,7 +4,6 @@ import { App } from './app'
 import { ConfigProvider, theme, Button, Card } from "antd";
 import 'antd/dist/reset.css'
 import './index.less'
-import './store'
 
 const { darkAlgorithm } = theme
 

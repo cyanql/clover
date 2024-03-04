@@ -1,0 +1,2 @@
+export const MAX_MANGA_PAGE_WIDTH = 600
+export const EACH_MANGA_PAGE_HEIGHT = 600
