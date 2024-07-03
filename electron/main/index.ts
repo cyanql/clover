@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, dialog, session } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import { initRenderer } from 'electron-store'
@@ -78,6 +78,22 @@ async function createWindow() {
     if (url.startsWith('https:')) shell.openExternal(url)
     return { action: 'deny' }
   })
+
+  const upperCorsKey = 'Access-Control-Allow-Origin'
+  const lowerCorsKey = upperCorsKey.toLowerCase()
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    if (details.responseHeaders && details.resourceType === 'xhr') {
+      if (details.responseHeaders[lowerCorsKey]) {
+        details.responseHeaders[lowerCorsKey] = ['*']
+      } else {
+        details.responseHeaders[upperCorsKey] = ['*']
+      }
+    }
+        
+    callback({ 
+      responseHeaders: details.responseHeaders
+    });
+  });
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 }
 

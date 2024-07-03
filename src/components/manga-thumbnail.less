@@ -1,23 +1,27 @@
+@cover-width: 200px;
+@cover-height: @cover-width * 17 / 12;
+
 .manga {
     &-card {
         &-container {
             padding: 30px 20px;
             height: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fill, 120px);
+            grid-template-columns: repeat(auto-fill, @cover-width);
             gap: 10px;
             justify-content: center;
         }
         border: 1px solid transparent;
-        width: 120px;
+        width: @cover-width;
         background-color: #202020;
         &-top {
             position: relative;
         }
         &-cover {
-            width: 120px;
-            height: 170px;
+            width: @cover-width;
+            height: @cover-height;
             vertical-align: middle;
+            object-fit: contain;
         }
         &-type {
             position: absolute;

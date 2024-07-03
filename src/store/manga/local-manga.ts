@@ -101,7 +101,7 @@ export class LocalManga extends BasicManga {
                 const buf = (await zip.entryData(imgEntries[0]))
                 const img = nativeImage.createFromBuffer(buf)
                 const jpg = LocalManga.toJPGBase64(img.resize({
-                    height: 170,
+                    height: 280,
                     quality: 'good',
                 }))
                 const size = img.getSize()
@@ -129,7 +129,7 @@ export class LocalManga extends BasicManga {
                 const coverPath = join(this.pathname, imgNames[0])
                 const img = nativeImage.createFromPath(coverPath)
                 const jpg = LocalManga.toJPGBase64(img.resize({
-                    height: 170,
+                    width: 150,
                     quality: 'good',
                 }))
                 const size = img.getSize()

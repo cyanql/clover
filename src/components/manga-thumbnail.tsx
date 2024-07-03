@@ -1,8 +1,9 @@
-import React, { memo, useCallback } from 'react'
-import { Card, Tag, Typography } from 'antd'
+import React, { MouseEvent, memo } from 'react'
+import { Card, Tag } from 'antd'
 import './manga-thumbnail.less'
 import { Ellipsis } from './ellipsis'
 import { BasicManga } from '../store/manga/basic-manga'
+import { useMemoizedFn } from '../utils/hooks'
 
 const style: React.CSSProperties = { padding: '6px', display: 'flex', flexDirection: 'column' }
 
@@ -11,14 +12,16 @@ const ellipsis = { rows: 3, suffix: '' }
 interface IProps {
     renderKey?: any
     manga: BasicManga
-    onClick: (manga: BasicManga) => void
+    onClick: (manga: BasicManga, e: MouseEvent) => void
+    onTagClick?: (text: string) => void
 }
 
 export const MangaThumbnail = memo((props: IProps) => {
-    const { manga, onClick } = props
-    const handleClick = useCallback(() => {
-        onClick?.(manga)
-    }, [onClick, manga])
+    const { manga, onClick, onTagClick } = props
+    const handleClick = useMemoizedFn((e: MouseEvent) => {
+        onClick?.(manga, e)
+    })
+
     return (
         <Card
             className="manga-card"
@@ -35,7 +38,7 @@ export const MangaThumbnail = memo((props: IProps) => {
             >
             <Ellipsis className="manga-card-title" copy>{manga.name}</Ellipsis>
             <Ellipsis className="manga-card-author" copy>{manga.author}</Ellipsis>
-            <div className="manga-card-tags">{manga.tags.map((v, i) => <Tag key={i} color="orange">{v}</Tag>)}</div>
+            <div className="manga-card-tags">{manga.tags.map((v, i) => <Tag key={i} color="orange" onClick={() => onTagClick?.(v)}>{v}</Tag>)}</div>
         </Card>
     )
 })
